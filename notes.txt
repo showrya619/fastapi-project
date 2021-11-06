@@ -19,6 +19,15 @@ Then we reference our fastapi instance app -> @app
 
 4. retreving POST Data
 
+    async def create_posts(payload: dict = Body(...)):
+    print(payload)
+
+
+5. We can use Pydantic to define how our schema looks like. pydantic - validation
+
+async def create_postsv2(new_post: Post): new_post will be saved as pydantic model. 
+
+Convert pydantic to dict -> print(new_post.dict())
 
 
 #uvicorn
