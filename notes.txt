@@ -1,0 +1,27 @@
+#Notes
+
+1. decorater in python turns function into a path operation
+
+@app.get("/")
+
+get    -> method
+root() -> function
+("/")  ->  path -> root url
+@      ->  decorator
+Then we reference our fastapi instance app -> @app
+
+
+2. retreving data - use GET operation
+
+3. If two paths are same, Fastapi will return first match, 
+    Request comes in with path and what request.(Ex: Get and ('/') )
+
+
+4. retreving POST Data
+
+
+
+#uvicorn
+
+uvicorn main:app                   - run the app(main - file name, app is app)
+uvicorn main:app --reload          - reload the server if any code changes
