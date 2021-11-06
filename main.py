@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
-
+from random import randrange
 
 
 
@@ -14,6 +14,17 @@ class Post(BaseModel):
 
 
 app = FastAPI()
+
+
+my_posts = [{"title":"title of post 1", "content":"content of post 1","id":1},
+            {"title":"Foood", "content":"Biryani","id":2}]
+
+
+
+def find_post(id):
+    for p in my_posts:
+        if p["id"] == id:
+            return p
 
 
 #decorater in python turns function into a path operation
@@ -28,7 +39,8 @@ async def root():
 
 @app.get("/posts")
 async def get_posts():
-    return {"data": "This is your posts"}
+    return {"data":my_posts}
+
 
 
 @app.post("/createpostsv1")
@@ -47,3 +59,22 @@ async def create_postsv2(post: Post):
     print(post.published)
     print(post.rating)
     return {"data":post.dict()}
+
+
+
+@app.post("/posts")
+#With pydantic and best naming conventions
+async def create_postsv2(post: Post):
+    post_dict = post.dict()
+    post_dict['id'] = randrange(0,99999999)
+    my_posts.append(post_dict)
+    return {"data":post_dict}
+
+
+
+@app.get("/posts/{id}")
+def get_post(id: int):
+    post = find_post(id)
+    #post = find_post(int(id)) - This is handled in path pareameter
+    #return {"post_details":f"Here is the post {id}"}
+    return {"post_details":post}

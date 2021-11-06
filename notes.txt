@@ -2,6 +2,10 @@
 
 1. decorater in python turns function into a path operation
 
+A "path" is also commonly called an "endpoint" or a "route".
+
+
+
 @app.get("/")
 
 get    -> method
@@ -28,6 +32,37 @@ Then we reference our fastapi instance app -> @app
 async def create_postsv2(new_post: Post): new_post will be saved as pydantic model. 
 
 Convert pydantic to dict -> print(new_post.dict())
+
+
+
+#naming conventions
+
+CRUD
+
+Create - Use POST
+6. Use plural - (/posts,/users)
+
+Read/Retreving - Use GET
+7. (/posts) - Get All posts
+8. app.get("/posts/{id}") - Get specific posts
+
+Update - Use - PUT/PATCH - Difference is when you use PUT you have to send all details,
+                           PATCH - Send Only field that require changes
+
+9. app.put("/posts/{id}") - update post
+
+
+Delete - Use DELETE
+
+10. app.delete("/posts/{id}") - delete post
+
+
+
+11. @app.get("/posts/{id}")  -> {id} -> path parameter
+
+
+
+12. Path parameter - will be returned as a string
 
 
 #uvicorn
