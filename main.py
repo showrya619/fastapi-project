@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Response,status
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
 from random import randrange
+from fastapi.exceptions import HTTPException
 
 
 
@@ -25,6 +26,12 @@ def find_post(id):
     for p in my_posts:
         if p["id"] == id:
             return p
+
+
+def del_post(id):
+    for i,p in enumerate(my_posts):
+        if p["id"] == id:
+            del my_posts[i]
 
 
 #decorater in python turns function into a path operation
@@ -62,7 +69,7 @@ async def create_postsv2(post: Post):
 
 
 
-@app.post("/posts")
+@app.post("/posts",status_code=status.HTTP_201_CREATED)
 #With pydantic and best naming conventions
 async def create_postsv2(post: Post):
     post_dict = post.dict()
@@ -73,8 +80,36 @@ async def create_postsv2(post: Post):
 
 
 @app.get("/posts/{id}")
-def get_post(id: int):
+def get_post(id: int, response:Response):
     post = find_post(id)
+
     #post = find_post(int(id)) - This is handled in path pareameter
     #return {"post_details":f"Here is the post {id}"}
+    
+    #Return status code 404 if item not found    
+    #With Hardcoding
+    # if not post:
+    #     response.status_code = 404
+    
+    #With status function in FastAPI
+    # if not post:
+    #     response.status_code = status.HTTP_404_NOT_FOUND
+    #     return {"message":f"post with id {id} not found"}
+
+    #With HTTP Exception in FastAPI
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id {id} not found")
+
     return {"post_details":post}
+
+
+@app.delete("/posts/{id}",status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id:int, response:Response):
+    post = find_post(id)
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id {id} not found")
+    delete_post = del_post(id)
+
+    return {"post_details":f"post with id {id} has been deleted"}
